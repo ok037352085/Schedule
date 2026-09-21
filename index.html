@@ -4,251 +4,381 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>工作進度表</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@1&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --cream:      #F5F1E8;
+            --cream-dark: #ECE7DA;
+            --ink:        #0C0A08;
+            --ink-mid:    #47403A;
+            --ink-light:  #88807A;
+            --rule:       #C4BAA8;
+            --rule-light: #DDD6C8;
+            --red:        #B03A2E;
+            --green:      #2B6040;
+            --blue:       #2A4A72;
+            --mono:       'Fira Code', 'Consolas', monospace;
+            --serif:      'Libre Baskerville', Georgia, serif;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 14px; }
 
         body {
-            font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
-            background: #f0f2f5;
-            color: #2c3e50;
+            background: var(--cream);
+            color: var(--ink);
+            font-family: var(--mono);
             min-height: 100vh;
         }
 
-        /* ── Header ── */
+        /* top accent stripe */
+        body::before {
+            content: '';
+            display: block;
+            height: 3px;
+            background: var(--red);
+        }
+
+        /* ── HEADER ─────────────────────────────── */
         .app-header {
-            background: linear-gradient(135deg, #1a2332 0%, #2c3e50 100%);
-            color: white;
-            padding: 18px 24px;
+            background: var(--ink);
+            color: var(--cream);
+            padding: 0 28px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
         }
-        .app-header h1 { font-size: 20px; font-weight: 600; letter-spacing: 1px; }
-        .save-status {
-            font-size: 12px;
-            background: rgba(255,255,255,0.12);
-            padding: 4px 12px;
-            border-radius: 20px;
-            transition: background 0.3s;
-        }
-        .save-status.saving { background: rgba(241,196,15,0.3); }
 
-        /* ── Controls ── */
-        .controls {
-            padding: 12px 24px;
-            background: white;
-            border-bottom: 1px solid #e0e5eb;
+        .header-left {
+            display: flex;
+            align-items: baseline;
+            gap: 18px;
+        }
+
+        .header-title {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 22px;
+            color: var(--cream);
+            letter-spacing: 0.01em;
+        }
+
+        .header-meta {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(245,241,232,0.3);
+        }
+
+        .save-indicator {
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(245,241,232,0.28);
+            transition: color 0.2s;
+        }
+        .save-indicator.saving { color: #D4894A; }
+
+        /* ── TOOLBAR ─────────────────────────────── */
+        .toolbar {
+            background: var(--cream-dark);
+            border-bottom: 1.5px solid var(--ink);
+            padding: 0 28px;
+            height: 44px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
         }
-        .controls label { font-size: 13px; color: #666; margin-right: 2px; }
-        .date-input {
-            padding: 7px 10px;
-            border: 1px solid #d0d7de;
-            border-radius: 6px;
-            font-size: 13px;
-            font-family: inherit;
-            color: #333;
-        }
-        .btn {
-            padding: 7px 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-family: inherit;
-            font-weight: 500;
-            transition: filter 0.15s, transform 0.1s;
-            white-space: nowrap;
-        }
-        .btn:hover { filter: brightness(1.1); }
-        .btn:active { transform: scale(0.97); }
-        .btn-add   { background: #27ae60; color: white; }
-        .btn-toggle { background: #8e44ad; color: white; }
-        .btn-export { background: #2980b9; color: white; }
-        .btn-csv    { background: #16a085; color: white; }
 
-        .mode-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
+        .t-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-right: 18px;
+            margin-right: 18px;
+            border-right: 1px solid var(--rule);
+        }
+        .t-group:last-child { border-right: none; padding-right: 0; margin-right: 0; }
+
+        .t-label {
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--ink-light);
+        }
+
+        input[type="date"] {
+            background: transparent;
+            border: 1px solid var(--rule);
+            padding: 4px 8px;
+            font-family: var(--mono);
             font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: white;
-            background: #8e44ad;
-            transition: background 0.3s;
+            color: var(--ink);
+            outline: none;
+            cursor: pointer;
+            border-radius: 0;
+        }
+        input[type="date"]:focus { border-color: var(--ink); }
+
+        .btn {
+            padding: 4px 12px;
+            border: 1px solid currentColor;
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            background: transparent;
+            border-radius: 0;
+            transition: background 0.12s, color 0.12s;
         }
 
-        /* ── Table ── */
+        .btn-ink  { color: var(--ink); }
+        .btn-ink:hover { background: var(--ink); color: var(--cream); }
+
+        .btn-red  { color: var(--red); border-color: var(--red); }
+        .btn-red:hover { background: var(--red); color: var(--cream); }
+
+        .btn-dim  { color: var(--ink-light); border-color: var(--rule); }
+        .btn-dim:hover { background: var(--ink-mid); color: var(--cream); border-color: var(--ink-mid); }
+
+        .mode-chip {
+            display: inline-block;
+            padding: 3px 9px;
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: var(--cream);
+            background: var(--red);
+        }
+
+        /* ── TABLE ───────────────────────────────── */
         .table-wrapper {
-            padding: 20px 24px;
+            padding: 24px 28px 36px;
             overflow-x: auto;
         }
+
         table {
-            border-collapse: separate;
-            border-spacing: 0;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 14px rgba(0,0,0,0.09);
-            overflow: hidden;
-            min-width: 500px;
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 560px;
+            border: 1.5px solid var(--ink);
         }
 
-        /* Header row */
         thead th {
-            background: #2c3e50;
-            color: white;
-            padding: 11px 14px;
-            font-size: 13px;
-            font-weight: 600;
+            background: var(--ink);
+            color: var(--cream);
+            padding: 8px 14px;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             text-align: center;
-            white-space: nowrap;
+            border-right: 1px solid rgba(245,241,232,0.1);
             position: relative;
-            min-width: 190px;
+            min-width: 210px;
         }
         thead th:first-child {
-            min-width: 155px;
+            min-width: 148px;
+            width: 148px;
             text-align: left;
-            background: #1a2332;
+            border-right: 1.5px solid rgba(245,241,232,0.22);
         }
-        .date-header { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .date-main { font-size: 14px; }
-        .date-week { font-size: 11px; opacity: 0.65; }
-        thead th.col-today { background: #1e8449 !important; }
+        thead th:last-child { border-right: none; }
+        thead th.col-today { background: var(--green); }
 
-        .delete-col-btn {
+        .th-inner { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+        .th-day   { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; }
+        .th-dow   { font-size: 10px; opacity: 0.48; letter-spacing: 0.16em; }
+
+        .del-btn {
             position: absolute;
-            top: 5px; right: 5px;
-            background: rgba(255,255,255,0.18);
+            top: 4px; right: 5px;
+            background: none;
             border: none;
-            color: rgba(255,255,255,0.8);
-            border-radius: 4px;
+            color: rgba(245,241,232,0.22);
             cursor: pointer;
-            font-size: 11px;
-            padding: 2px 5px;
+            font-size: 14px;
+            line-height: 1;
+            padding: 1px 3px;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: opacity 0.15s, color 0.15s;
         }
-        thead th:hover .delete-col-btn { opacity: 1; }
+        thead th:hover .del-btn { opacity: 1; }
+        .del-btn:hover { color: rgba(245,241,232,0.85); }
 
-        /* Body cells */
+        tbody tr { border-bottom: 1px solid var(--rule-light); }
+        tbody tr:last-child { border-bottom: none; }
+
         tbody td {
-            border-top: 1px solid #edf0f4;
-            border-right: 1px solid #edf0f4;
+            border-right: 1px solid var(--rule-light);
             vertical-align: top;
         }
         tbody td:last-child { border-right: none; }
 
+        /* Row label cells */
         td.row-label {
-            background: #f5f7fa;
-            border-right: 2px solid #dde3eb !important;
-            padding: 14px 16px;
-            font-weight: 600;
-            font-size: 13px;
-            color: #4a5568;
-            white-space: nowrap;
+            background: var(--ink);
+            border-right: 1.5px solid var(--ink) !important;
+            padding: 12px 14px;
             vertical-align: middle;
-            min-width: 155px;
+            white-space: nowrap;
             user-select: none;
         }
-        td.row-label .label-dot {
-            display: inline-block;
-            width: 9px; height: 9px;
-            border-radius: 50%;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        #row-today  td.row-label .label-dot { background: #27ae60; }
-        #row-next   td.row-label .label-dot { background: #8e44ad; }
-        #row-notes  td.row-label .label-dot { background: #f39c12; }
 
+        .lbl-num {
+            display: block;
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 19px;
+            color: rgba(245,241,232,0.15);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .lbl-text {
+            display: block;
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        #row-today .lbl-text { color: #72C290; }
+        #row-next  .lbl-text { color: #E8956A; }
+        #row-notes .lbl-text { color: #7AADCF; }
+
+        /* Editable cells */
         td.editable {
-            padding: 10px 12px;
+            padding: 11px 14px;
             outline: none;
-            font-size: 13px;
-            line-height: 1.65;
-            min-height: 82px;
+            font-family: var(--mono);
+            font-size: 12.5px;
+            line-height: 1.72;
+            min-height: 90px;
             cursor: text;
-            color: #3d4a5a;
-            transition: background 0.15s;
+            color: var(--ink-mid);
+            background: var(--cream);
+            transition: background 0.1s;
         }
+
         td.editable:focus {
-            box-shadow: inset 0 0 0 2px #3498db;
-            z-index: 1;
+            background: #FDFCF8;
+            box-shadow: inset 2px 0 0 var(--red);
+            color: var(--ink);
             position: relative;
+            z-index: 1;
         }
+
         td.editable:empty::before {
             content: attr(data-placeholder);
-            color: #c5cbd3;
+            color: var(--rule);
             font-style: italic;
             pointer-events: none;
         }
 
-        #row-today td.editable  { background: #f9fff9; }
-        #row-next  td.editable  { background: #fdf7ff; }
-        #row-notes td.editable  { background: #fffdf5; }
-        #row-today td.editable:focus  { background: #f0fff4; }
-        #row-next  td.editable:focus  { background: #f5edff; }
-        #row-notes td.editable:focus  { background: #fffbec; }
+        #row-today td.editable { background: #F4F1E9; }
+        #row-next  td.editable { background: #F5F0EA; }
+        #row-notes td.editable { background: #F4F2EA; }
+        #row-today td.editable:focus,
+        #row-next  td.editable:focus,
+        #row-notes td.editable:focus { background: #FDFCF8; }
 
-        td.editable.col-today-cell { border-top: 2px solid #27ae60 !important; }
+        td.editable.col-today-cell {
+            border-top: 2px solid var(--green) !important;
+        }
 
-        /* ── Footer ── */
+        /* ── FOOTER ──────────────────────────────── */
         .footer {
-            text-align: center;
-            padding: 14px;
-            font-size: 11px;
-            color: #b0bec5;
+            padding: 12px 28px;
+            border-top: 1px solid var(--rule-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-l {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-light);
+        }
+        .footer-r {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 13px;
+            color: var(--rule);
         }
     </style>
 </head>
 <body>
 
 <header class="app-header">
-    <h1>工作進度表</h1>
-    <span class="save-status" id="save-status">✓ 已儲存</span>
+    <div class="header-left">
+        <span class="header-title">工作進度表</span>
+        <span class="header-meta">Work Log</span>
+    </div>
+    <span class="save-indicator" id="save-status">Saved</span>
 </header>
 
-<div class="controls">
-    <label for="new-date-input">日期：</label>
-    <input type="date" id="new-date-input" class="date-input">
-    <button class="btn btn-add" onclick="addDateColumn()">＋ 新增日期</button>
-    <button class="btn btn-toggle" id="toggle-btn" onclick="toggleRow2Mode()">切換 → 下週</button>
-    <span class="mode-badge" id="mode-badge">目前：明日</span>
-    <button class="btn btn-export" onclick="exportJSON()">匯出 JSON</button>
-    <button class="btn btn-csv" onclick="exportCSV()">匯出 CSV</button>
+<div class="toolbar">
+    <div class="t-group">
+        <span class="t-label">Date</span>
+        <input type="date" id="new-date-input">
+        <button class="btn btn-ink" onclick="addDateColumn()">+ Add</button>
+    </div>
+    <div class="t-group">
+        <button class="btn btn-red" id="toggle-btn" onclick="toggleRow2Mode()">→ Next Week</button>
+        <span class="mode-chip" id="mode-badge">Tomorrow</span>
+    </div>
+    <div class="t-group">
+        <button class="btn btn-dim" onclick="exportJSON()">JSON</button>
+        <button class="btn btn-dim" onclick="exportCSV()">CSV</button>
+    </div>
 </div>
 
 <div class="table-wrapper">
     <table id="progress-table">
         <thead>
             <tr id="header-row">
-                <th>項目 / 日期</th>
+                <th>— / —</th>
             </tr>
         </thead>
         <tbody>
             <tr id="row-today">
-                <td class="row-label"><span class="label-dot"></span>當日工作進度</td>
+                <td class="row-label">
+                    <span class="lbl-num">01</span>
+                    <span class="lbl-text">當日進度</span>
+                </td>
             </tr>
             <tr id="row-next">
-                <td class="row-label" id="row2-label"><span class="label-dot"></span>明日工作進度</td>
+                <td class="row-label">
+                    <span class="lbl-num">02</span>
+                    <span class="lbl-text" id="row2-lbl">明日進度</span>
+                </td>
             </tr>
             <tr id="row-notes">
-                <td class="row-label"><span class="label-dot"></span>備註</td>
+                <td class="row-label">
+                    <span class="lbl-num">03</span>
+                    <span class="lbl-text">備　　註</span>
+                </td>
             </tr>
         </tbody>
     </table>
 </div>
 
-<div class="footer">資料自動儲存於瀏覽器 LocalStorage · 搭配 GitHub 進行版本管理</div>
+<footer class="footer">
+    <span class="footer-l">Auto-saved · GitHub Pages</span>
+    <span class="footer-r" id="footer-date"></span>
+</footer>
 
 <script>
-    const WEEKDAYS = ['日','一','二','三','四','五','六'];
+    const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-    /* ── State ── */
     let state = { dates: [], row2Mode: 'tomorrow', data: {} };
 
     function loadState() {
@@ -259,28 +389,26 @@
         if (!state.dates.length) state.dates = [todayStr()];
     }
 
+    let saveTimer;
     function saveState() {
         const el = document.getElementById('save-status');
-        el.textContent = '… 儲存中';
+        el.textContent = 'Saving…';
         el.classList.add('saving');
-        localStorage.setItem('workProgressState_v1', JSON.stringify(state));
-        setTimeout(() => {
-            el.textContent = '✓ 已儲存';
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+            localStorage.setItem('workProgressState_v1', JSON.stringify(state));
+            el.textContent = 'Saved';
             el.classList.remove('saving');
-        }, 400);
+        }, 500);
     }
 
-    /* ── Helpers ── */
-    function todayStr() {
-        return new Date().toISOString().split('T')[0];
-    }
+    function todayStr() { return new Date().toISOString().split('T')[0]; }
 
     function fmtDate(ds) {
         const d = new Date(ds + 'T00:00:00');
-        return {
-            main: `${d.getMonth()+1}/${d.getDate()}`,
-            week: `週${WEEKDAYS[d.getDay()]}`
-        };
+        const mm = String(d.getMonth()+1).padStart(2,'0');
+        const dd = String(d.getDate()).padStart(2,'0');
+        return { day: `${mm}.${dd}`, dow: DOW[d.getDay()] };
     }
 
     function ensureDate(ds) {
@@ -288,26 +416,19 @@
     }
 
     function nextKey() { return state.row2Mode === 'tomorrow' ? 'tomorrow' : 'nextweek'; }
-    function nextLabel() { return state.row2Mode === 'tomorrow' ? '明日工作進度' : '下週工作進度'; }
-    function nextPlaceholder() { return state.row2Mode === 'tomorrow' ? '輸入明日工作進度…' : '輸入下週工作進度…'; }
 
-    /* ── Render ── */
     function renderTable() {
         const hdr  = document.getElementById('header-row');
         const rTod = document.getElementById('row-today');
         const rNxt = document.getElementById('row-next');
         const rNts = document.getElementById('row-notes');
 
-        [hdr, rTod, rNxt, rNts].forEach(row => {
-            while (row.children.length > 1) row.removeChild(row.lastChild);
+        [hdr, rTod, rNxt, rNts].forEach(r => {
+            while (r.children.length > 1) r.removeChild(r.lastChild);
         });
 
-        // Update row2 label text (keep dot span)
-        const lbl2 = document.getElementById('row2-label');
-        const dot2 = lbl2.querySelector('.label-dot');
-        lbl2.textContent = '';
-        lbl2.appendChild(dot2);
-        lbl2.append(nextLabel());
+        document.getElementById('row2-lbl').textContent =
+            state.row2Mode === 'tomorrow' ? '明日進度' : '下週進度';
 
         const today = todayStr();
 
@@ -316,22 +437,22 @@
             const f = fmtDate(ds);
             const isToday = ds === today;
 
-            /* -- header -- */
             const th = document.createElement('th');
             if (isToday) th.classList.add('col-today');
             th.innerHTML = `
-                <div class="date-header">
-                    <span class="date-main">${f.main}</span>
-                    <span class="date-week">${f.week}</span>
+                <div class="th-inner">
+                    <span class="th-day">${f.day}</span>
+                    <span class="th-dow">${f.dow}${isToday ? ' · Today' : ''}</span>
                 </div>
-                <button class="delete-col-btn" onclick="deleteDate('${ds}')" title="刪除此欄">✕</button>
+                <button class="del-btn" onclick="deleteDate('${ds}')" title="Remove">×</button>
             `;
             hdr.appendChild(th);
 
-            /* -- cells -- */
-            rTod.appendChild(mkCell(ds, 'today',    '輸入當日工作進度…', isToday));
-            rNxt.appendChild(mkCell(ds, nextKey(),  nextPlaceholder(),    isToday));
-            rNts.appendChild(mkCell(ds, 'notes',    '輸入備註…',          isToday));
+            const ph = { today:'當日工作進度…', tomorrow:'明日計畫…', nextweek:'下週計畫…', notes:'備註…' };
+
+            rTod.appendChild(mkCell(ds, 'today',    ph.today,        isToday));
+            rNxt.appendChild(mkCell(ds, nextKey(),  ph[nextKey()],   isToday));
+            rNts.appendChild(mkCell(ds, 'notes',    ph.notes,        isToday));
         });
 
         updateToggleUI();
@@ -350,32 +471,26 @@
             saveState();
         });
 
-        /* preserve newlines on paste */
         td.addEventListener('paste', e => {
             e.preventDefault();
-            const text = (e.clipboardData || window.clipboardData).getData('text');
-            document.execCommand('insertText', false, text);
+            document.execCommand('insertText', false,
+                (e.clipboardData || window.clipboardData).getData('text'));
         });
 
         return td;
     }
 
-    /* ── Actions ── */
     function addDateColumn() {
         const inp = document.getElementById('new-date-input');
         let ds = inp.value;
-
         if (!ds) {
-            if (state.dates.length) {
-                const last = new Date(state.dates[state.dates.length - 1] + 'T00:00:00');
-                last.setDate(last.getDate() + 1);
-                ds = last.toISOString().split('T')[0];
-            } else {
-                ds = todayStr();
-            }
+            const base = state.dates.length
+                ? new Date(state.dates[state.dates.length-1] + 'T00:00:00')
+                : new Date();
+            base.setDate(base.getDate() + 1);
+            ds = base.toISOString().split('T')[0];
         }
-
-        if (state.dates.includes(ds)) { alert('此日期已存在！'); return; }
+        if (state.dates.includes(ds)) { alert('此日期已存在'); return; }
         state.dates.push(ds);
         state.dates.sort();
         ensureDate(ds);
@@ -385,7 +500,7 @@
     }
 
     function deleteDate(ds) {
-        if (!confirm(`確定要刪除「${ds}」的欄位嗎？\n（資料將一併清除）`)) return;
+        if (!confirm(`刪除 ${ds}？`)) return;
         state.dates = state.dates.filter(d => d !== ds);
         delete state.data[ds];
         saveState();
@@ -402,41 +517,42 @@
         const btn   = document.getElementById('toggle-btn');
         const badge = document.getElementById('mode-badge');
         if (state.row2Mode === 'tomorrow') {
-            btn.textContent   = '切換 → 下週';
-            badge.textContent = '目前：明日';
-            badge.style.background = '#8e44ad';
+            btn.textContent = '→ Next Week';
+            badge.textContent = 'Tomorrow';
+            badge.style.background = '#B03A2E';
         } else {
-            btn.textContent   = '切換 → 明日';
-            badge.textContent = '目前：下週';
-            badge.style.background = '#d35400';
+            btn.textContent = '→ Tomorrow';
+            badge.textContent = 'Next Week';
+            badge.style.background = '#2A4A72';
         }
     }
 
-    /* ── Export ── */
     function exportJSON() {
         dl('work-progress.json', JSON.stringify(state, null, 2), 'application/json');
     }
 
     function exportCSV() {
-        const rows = [['日期','當日工作進度','明日工作進度','下週工作進度','備註']];
+        const rows = [['日期','當日','明日','下週','備註']];
         state.dates.forEach(ds => {
             const d = state.data[ds] || {};
             rows.push([ds, d.today||'', d.tomorrow||'', d.nextweek||'', d.notes||'']);
         });
         const csv = rows.map(r => r.map(c => `"${c.replace(/"/g,'""')}"`).join(',')).join('\r\n');
-        dl('work-progress.csv', '﻿' + csv, 'text/csv');  // BOM for Excel
+        dl('work-progress.csv', '﻿'+csv, 'text/csv');
     }
 
     function dl(name, content, mime) {
         const a = Object.assign(document.createElement('a'), {
-            href: URL.createObjectURL(new Blob([content], {type: mime})),
+            href: URL.createObjectURL(new Blob([content], {type:mime})),
             download: name
         });
         a.click();
         URL.revokeObjectURL(a.href);
     }
 
-    /* ── Init ── */
+    document.getElementById('footer-date').textContent =
+        new Date().toLocaleDateString('zh-TW', { year:'numeric', month:'long', day:'numeric' });
+
     loadState();
     document.getElementById('new-date-input').value = todayStr();
     renderTable();
