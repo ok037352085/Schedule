@@ -18,6 +18,8 @@
             --rule-light: #DDD6C8;
             --red:        #B03A2E;
             --green:      #2B6040;
+            --green-pale: rgba(43,96,64,0.09);
+            --amber:      #C47A2E;
             --blue:       #2A4A72;
             --mono:       'Fira Code', 'Consolas', monospace;
             --serif:      'Libre Baskerville', Georgia, serif;
@@ -72,227 +74,287 @@
         }
         .save-indicator.saving { color: #D4894A; }
 
-        /* ── TOOLBAR ── */
-        .toolbar {
+        /* ── CAL TOOLBAR ── */
+        .cal-toolbar {
             background: var(--cream-dark);
             border-bottom: 1.5px solid var(--ink);
             padding: 0 28px;
             height: 44px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
-        .t-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding-right: 18px;
-            margin-right: 18px;
-            border-right: 1px solid var(--rule);
-        }
-        .t-group:last-child { border-right: none; padding-right: 0; margin-right: 0; }
-        .t-label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-light); }
-
-        input[type="date"] {
-            background: transparent;
+        .cal-nav { display: flex; align-items: center; gap: 12px; }
+        .cal-nav-btn {
+            background: none;
             border: 1px solid var(--rule);
-            padding: 4px 8px;
-            font-family: var(--mono);
-            font-size: 12px;
             color: var(--ink);
-            outline: none;
             cursor: pointer;
-            border-radius: 0;
+            font-size: 15px;
+            width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.12s, color 0.12s;
+            font-family: var(--mono);
         }
-        input[type="date"]:focus { border-color: var(--ink); }
+        .cal-nav-btn:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+        .cal-month-label {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 18px;
+            min-width: 220px;
+        }
+        .cal-today-btn {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: none;
+            border: 1px solid var(--rule);
+            color: var(--ink-light);
+            padding: 3px 10px;
+            cursor: pointer;
+            transition: background 0.12s, color 0.12s;
+        }
+        .cal-today-btn:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
 
+        .export-group { display: flex; gap: 6px; }
         .btn {
             padding: 4px 12px;
-            border: 1px solid currentColor;
+            border: 1px solid var(--rule);
             font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: 0.06em;
+            font-size: 10px;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             cursor: pointer;
             background: transparent;
-            border-radius: 0;
+            color: var(--ink-light);
             transition: background 0.12s, color 0.12s;
         }
-        .btn-ink { color: var(--ink); }
-        .btn-ink:hover { background: var(--ink); color: var(--cream); }
-        .btn-red { color: var(--red); border-color: var(--red); }
-        .btn-red:hover { background: var(--red); color: var(--cream); }
-        .btn-dim { color: var(--ink-light); border-color: var(--rule); }
-        .btn-dim:hover { background: var(--ink-mid); color: var(--cream); border-color: var(--ink-mid); }
+        .btn:hover { background: var(--ink-mid); color: var(--cream); border-color: var(--ink-mid); }
 
-        .mode-chip {
-            display: inline-block;
-            padding: 3px 9px;
+        /* ── CALENDAR ── */
+        .cal-wrap { padding: 0 28px 36px; }
+
+        .cal-dow-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border: 1.5px solid var(--ink);
+            border-bottom: none;
+        }
+        .cal-dow {
+            padding: 7px 8px;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--ink-light);
+            text-align: center;
+            background: var(--cream-dark);
+            border-right: 1px solid var(--rule-light);
+        }
+        .cal-dow:last-child { border-right: none; }
+        .cal-dow.weekend { color: var(--rule); }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border: 1.5px solid var(--ink);
+        }
+
+        .cal-cell {
+            border-right: 1px solid var(--rule-light);
+            border-bottom: 1px solid var(--rule-light);
+            min-height: 90px;
+            padding: 8px;
+            cursor: pointer;
+            background: var(--cream);
+            transition: background 0.1s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .cal-cell:nth-child(7n)      { border-right: none; }
+        .cal-cell:nth-last-child(-n+7) { border-bottom: none; }
+        .cal-cell:hover              { background: #EEE9DE; }
+
+        .cal-cell.other-month { background: #F8F5EE; }
+        .cal-cell.other-month:hover { background: #F3EFE6; }
+        .cal-cell.other-month .cal-num { color: var(--rule); }
+
+        .cal-cell.weekend     { background: #F3EFE8; }
+        .cal-cell.weekend:hover { background: #EAE5DA; }
+
+        .cal-cell.is-today    { background: var(--green-pale); }
+        .cal-cell.is-today:hover { background: rgba(43,96,64,0.13); }
+
+        .cal-num {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ink);
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px; height: 22px;
+            flex-shrink: 0;
+        }
+        .cal-cell.is-today .cal-num {
+            background: var(--green);
+            color: var(--cream);
+        }
+
+        .cal-preview {
+            font-size: 10px;
+            color: var(--ink-mid);
+            line-height: 1.45;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            flex: 1;
+        }
+        .cal-cell.other-month .cal-preview { display: none; }
+
+        .cal-dots {
+            display: flex;
+            gap: 3px;
+            margin-top: auto;
+        }
+        .dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .dot-today { background: var(--green); }
+        .dot-next  { background: var(--amber); }
+        .dot-notes { background: var(--blue); }
+
+        /* ── MODAL ── */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(12,10,8,0.52);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-backdrop.open { display: flex; }
+
+        @keyframes modal-in {
+            from { opacity: 0; transform: scale(0.97) translateY(6px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal {
+            background: var(--cream);
+            border: 1.5px solid var(--ink);
+            width: 100%;
+            max-width: 480px;
+            max-height: 88vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            animation: modal-in 0.18s ease-out;
+        }
+
+        .modal-head {
+            background: var(--ink);
+            color: var(--cream);
+            padding: 14px 18px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        .modal-date-big {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 20px;
+            color: var(--cream);
+            line-height: 1.2;
+        }
+        .modal-date-sub {
             font-size: 10px;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            font-weight: 500;
-            color: var(--cream);
-            background: var(--red);
+            color: rgba(245,241,232,0.42);
+            margin-top: 3px;
         }
+        .modal-close {
+            background: none;
+            border: 1px solid rgba(245,241,232,0.22);
+            color: rgba(245,241,232,0.55);
+            cursor: pointer;
+            font-family: var(--mono);
+            font-size: 17px;
+            width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.12s, color 0.12s;
+            flex-shrink: 0;
+        }
+        .modal-close:hover { background: rgba(245,241,232,0.12); color: var(--cream); }
 
-        /* ── WEEK SECTIONS ── */
-        .weeks-container {
-            padding: 24px 28px 40px;
+        .modal-body {
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            gap: 36px;
-        }
-
-        .week-hd {
-            display: flex;
-            align-items: baseline;
             gap: 14px;
-            padding-bottom: 6px;
-            border-bottom: 1.5px solid var(--ink);
         }
 
-        .week-num {
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--cream);
-            background: var(--red);
-            padding: 2px 7px;
-        }
+        .modal-field { display: flex; flex-direction: column; gap: 5px; }
 
-        .week-range {
-            font-family: var(--serif);
-            font-style: italic;
-            font-size: 13px;
-            color: var(--ink-light);
+        .field-lbl-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-
-        .table-scroll { overflow-x: auto; }
-
-        /* ── TABLE ── */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            min-width: 400px;
-            border: 1.5px solid var(--ink);
-            border-top: none;
-        }
-
-        thead th {
-            background: var(--ink);
-            color: var(--cream);
-            padding: 8px 14px;
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-align: center;
-            border-right: 1px solid rgba(245,241,232,0.1);
-            position: relative;
-            min-width: 210px;
-        }
-        thead th:first-child {
-            min-width: 148px;
-            width: 148px;
-            text-align: left;
-            border-right: 1.5px solid rgba(245,241,232,0.22);
-        }
-        thead th:last-child { border-right: none; }
-        thead th.col-today { background: var(--green); }
-
-        .th-inner { display: flex; flex-direction: column; align-items: center; gap: 1px; }
-        .th-day { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; }
-        .th-dow { font-size: 10px; opacity: 0.48; letter-spacing: 0.16em; }
-
-        .del-btn {
-            position: absolute;
-            top: 4px; right: 5px;
-            background: none;
-            border: none;
-            color: rgba(245,241,232,0.22);
-            cursor: pointer;
-            font-size: 14px;
-            line-height: 1;
-            padding: 1px 3px;
-            opacity: 0;
-            transition: opacity 0.15s, color 0.15s;
-        }
-        thead th:hover .del-btn { opacity: 1; }
-        .del-btn:hover { color: rgba(245,241,232,0.85); }
-
-        tbody tr { border-bottom: 1px solid var(--rule-light); }
-        tbody tr:last-child { border-bottom: none; }
-        tbody td { border-right: 1px solid var(--rule-light); vertical-align: top; }
-        tbody td:last-child { border-right: none; }
-
-        td.row-label {
-            background: var(--ink);
-            border-right: 1.5px solid var(--ink) !important;
-            padding: 12px 14px;
-            vertical-align: middle;
-            white-space: nowrap;
-            user-select: none;
-        }
-        .lbl-num {
-            display: block;
-            font-family: var(--serif);
-            font-style: italic;
-            font-size: 19px;
-            color: rgba(245,241,232,0.15);
-            line-height: 1;
-            margin-bottom: 4px;
-        }
-        .lbl-text {
-            display: block;
-            font-family: var(--mono);
+        .field-lbl {
             font-size: 10px;
-            font-weight: 500;
             letter-spacing: 0.16em;
             text-transform: uppercase;
+            font-weight: 500;
         }
+        .lbl-today { color: var(--green); }
+        .lbl-next  { color: var(--amber); }
+        .lbl-notes { color: var(--blue); }
 
-        /* Row type colours via class (not ID — multiple tables) */
-        tr.row-today .lbl-text { color: #72C290; }
-        tr.row-next  .lbl-text { color: #E8956A; }
-        tr.row-notes .lbl-text { color: #7AADCF; }
+        .field-toggle {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: none;
+            border: 1px solid var(--rule);
+            color: var(--ink-light);
+            cursor: pointer;
+            padding: 2px 8px;
+            transition: background 0.12s, color 0.12s;
+        }
+        .field-toggle:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
 
-        td.editable {
-            padding: 11px 14px;
-            outline: none;
+        .field-ta {
+            width: 100%;
+            min-height: 76px;
+            padding: 10px 12px;
+            background: white;
+            border: 1px solid var(--rule-light);
+            border-top: 2px solid var(--rule);
             font-family: var(--mono);
             font-size: 12.5px;
-            line-height: 1.72;
-            min-height: 90px;
-            cursor: text;
-            color: var(--ink-mid);
-            background: var(--cream);
-            transition: background 0.1s;
-        }
-        td.editable:focus {
-            background: #FDFCF8;
-            box-shadow: inset 2px 0 0 var(--red);
+            line-height: 1.7;
             color: var(--ink);
-            position: relative;
-            z-index: 1;
+            resize: vertical;
+            outline: none;
+            transition: border-top-color 0.12s;
         }
-        td.editable:empty::before {
-            content: attr(data-placeholder);
-            color: var(--rule);
-            font-style: italic;
-            pointer-events: none;
-        }
-
-        tr.row-today td.editable { background: #F4F1E9; }
-        tr.row-next  td.editable { background: #F5F0EA; }
-        tr.row-notes td.editable { background: #F4F2EA; }
-        tr.row-today td.editable:focus,
-        tr.row-next  td.editable:focus,
-        tr.row-notes td.editable:focus { background: #FDFCF8; }
-
-        td.editable.col-today-cell { border-top: 2px solid var(--green) !important; }
+        .field-ta:focus { border-top-color: var(--red); }
+        .field-ta::placeholder { color: var(--rule); font-style: italic; }
 
         /* ── FOOTER ── */
         .footer {
@@ -304,6 +366,23 @@
         }
         .footer-l { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); }
         .footer-r { font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--rule); }
+
+        /* ── Legend ── */
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 28px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--ink-light);
+        }
     </style>
 </head>
 <body>
@@ -316,40 +395,100 @@
     <span class="save-indicator" id="save-status">Saved</span>
 </header>
 
-<div class="toolbar">
-    <div class="t-group">
-        <span class="t-label">Date</span>
-        <input type="date" id="new-date-input">
-        <button class="btn btn-ink" onclick="addDateColumn()">+ Add</button>
+<div class="cal-toolbar">
+    <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
+        <span class="cal-month-label" id="cal-month-label">—</span>
+        <button class="cal-nav-btn" onclick="nextMonth()">›</button>
+        <button class="cal-today-btn" onclick="goToday()">Today</button>
     </div>
-    <div class="t-group">
-        <button class="btn btn-red" id="toggle-btn" onclick="toggleRow2Mode()">→ Next Week</button>
-        <span class="mode-chip" id="mode-badge">Tomorrow</span>
-    </div>
-    <div class="t-group">
-        <button class="btn btn-dim" onclick="exportJSON()">JSON</button>
-        <button class="btn btn-dim" onclick="exportCSV()">CSV</button>
+    <div class="export-group">
+        <button class="btn" onclick="exportJSON()">JSON</button>
+        <button class="btn" onclick="exportCSV()">CSV</button>
     </div>
 </div>
 
-<div class="weeks-container" id="weeks-container"></div>
+<div class="legend">
+    <span class="legend-item"><span class="dot dot-today"></span>當日</span>
+    <span class="legend-item"><span class="dot dot-next"></span>明日／下週</span>
+    <span class="legend-item"><span class="dot dot-notes"></span>備註</span>
+</div>
+
+<div class="cal-wrap" style="padding-top:12px">
+    <div class="cal-dow-row">
+        <div class="cal-dow">Mon</div>
+        <div class="cal-dow">Tue</div>
+        <div class="cal-dow">Wed</div>
+        <div class="cal-dow">Thu</div>
+        <div class="cal-dow">Fri</div>
+        <div class="cal-dow weekend">Sat</div>
+        <div class="cal-dow weekend">Sun</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+</div>
 
 <footer class="footer">
-    <span class="footer-l">Auto-saved · GitHub Pages</span>
+    <span class="footer-l">點擊日期紀錄進度 · Auto-saved</span>
     <span class="footer-r" id="footer-date"></span>
 </footer>
 
+<!-- Modal -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="onBackdropClick(event)">
+    <div class="modal" id="modal">
+        <div class="modal-head">
+            <div>
+                <div class="modal-date-big" id="modal-date-big">—</div>
+                <div class="modal-date-sub" id="modal-date-sub">—</div>
+            </div>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-field">
+                <div class="field-lbl-row">
+                    <span class="field-lbl lbl-today">01 · 當日工作進度</span>
+                </div>
+                <textarea class="field-ta" id="f-today" placeholder="今天完成了什麼…"></textarea>
+            </div>
+            <div class="modal-field">
+                <div class="field-lbl-row">
+                    <span class="field-lbl lbl-next" id="f-next-lbl">02 · 明日工作進度</span>
+                    <button class="field-toggle" id="f-toggle" onclick="toggleMode()">切換→ 下週</button>
+                </div>
+                <textarea class="field-ta" id="f-next" placeholder="明日計畫…"></textarea>
+            </div>
+            <div class="modal-field">
+                <div class="field-lbl-row">
+                    <span class="field-lbl lbl-notes">03 · 備　　註</span>
+                </div>
+                <textarea class="field-ta" id="f-notes" placeholder="備註…"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const MONTHS = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    const DOW_EN = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
-    let state = { dates: [], row2Mode: 'tomorrow', data: {} };
+    /* ── State ── */
+    let state = { row2Mode: 'tomorrow', data: {} };
+    let ui    = {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth(),
+        activeDate: null,
+    };
 
+    /* ── Persist ── */
     function loadState() {
         try {
             const s = localStorage.getItem('workProgressState_v1');
-            if (s) state = Object.assign({ dates:[], row2Mode:'tomorrow', data:{} }, JSON.parse(s));
+            if (s) {
+                const saved = JSON.parse(s);
+                state.row2Mode = saved.row2Mode || 'tomorrow';
+                state.data     = saved.data     || {};
+            }
         } catch(_) {}
-        if (!state.dates.length) state.dates = [todayStr()];
     }
 
     let saveTimer;
@@ -362,17 +501,11 @@
             localStorage.setItem('workProgressState_v1', JSON.stringify(state));
             el.textContent = 'Saved';
             el.classList.remove('saving');
-        }, 500);
+        }, 400);
     }
 
+    /* ── Helpers ── */
     function todayStr() { return new Date().toISOString().split('T')[0]; }
-
-    function fmtDate(ds) {
-        const d = new Date(ds + 'T00:00:00');
-        const mm = String(d.getMonth()+1).padStart(2,'0');
-        const dd = String(d.getDate()).padStart(2,'0');
-        return { day: `${mm}.${dd}`, dow: DOW[d.getDay()] };
-    }
 
     function ensureDate(ds) {
         if (!state.data[ds]) state.data[ds] = { today:'', tomorrow:'', nextweek:'', notes:'' };
@@ -380,208 +513,190 @@
 
     function nextKey() { return state.row2Mode === 'tomorrow' ? 'tomorrow' : 'nextweek'; }
 
-    /* ── Week grouping ────────────────────────────
-       Key = Monday of ISO week (not display start).
-       Dates that fall in the same ISO week are grouped
-       together regardless of which day they start on.
-    ─────────────────────────────────────────────── */
-    function getMondayKey(ds) {
+    function isoWeek(ds) {
         const d = new Date(ds + 'T00:00:00');
-        const day = d.getDay();                  // 0=Sun … 6=Sat
-        const diff = day === 0 ? -6 : 1 - day;  // offset to Monday
-        const mon = new Date(d);
-        mon.setDate(d.getDate() + diff);
-        return mon.toISOString().split('T')[0];
-    }
-
-    function getISOWeekNum(mondayDs) {
-        const mon = new Date(mondayDs + 'T00:00:00');
-        const thu = new Date(mon);
-        thu.setDate(mon.getDate() + 3);           // Thursday of same week
+        const day = d.getDay() || 7;
+        const thu = new Date(d);
+        thu.setDate(d.getDate() + 4 - day);
         const yearStart = new Date(thu.getFullYear(), 0, 1);
         return Math.ceil(((thu - yearStart) / 86400000 + 1) / 7);
     }
 
-    function groupDates(dates) {
-        const map = {};
-        const order = [];
-        dates.forEach(ds => {
-            const key = getMondayKey(ds);
-            if (!map[key]) { map[key] = []; order.push(key); }
-            map[key].push(ds);
-        });
-        return order.map(k => ({ mondayKey: k, dates: map[k] }));
-    }
-
-    function fmtRange(first, last) {
-        const s = ds => {
-            const d = new Date(ds + 'T00:00:00');
-            return `${d.getMonth()+1}/${d.getDate()}`;
+    function fmtModalDate(ds) {
+        const d = new Date(ds + 'T00:00:00');
+        const dow = DOW_EN[(d.getDay() + 6) % 7];
+        return {
+            big: `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`,
+            sub: `${dow} · Week ${isoWeek(ds)}`,
         };
-        return first === last ? s(first) : `${s(first)} — ${s(last)}`;
     }
 
-    /* ── Render ─────────────────────────────────── */
-    function renderTable() {
-        const container = document.getElementById('weeks-container');
-        container.innerHTML = '';
+    /* ── Calendar ── */
+    function renderCalendar() {
+        const grid = document.getElementById('cal-grid');
+        grid.innerHTML = '';
 
         const today = todayStr();
-        const groups = groupDates(state.dates);
+        document.getElementById('cal-month-label').textContent =
+            `${MONTHS[ui.month]} ${ui.year}`;
 
-        groups.forEach(({ mondayKey, dates }) => {
-            const weekNum = getISOWeekNum(mondayKey);
-            const section = document.createElement('div');
-            section.className = 'week-section';
+        // First day of month, offset to Monday start
+        const first = new Date(ui.year, ui.month, 1);
+        const startOffset = (first.getDay() + 6) % 7; // 0=Mon
+        const startDate = new Date(first);
+        startDate.setDate(first.getDate() - startOffset);
 
-            // Week header
-            const hd = document.createElement('div');
-            hd.className = 'week-hd';
-            hd.innerHTML =
-                `<span class="week-num">W${weekNum}</span>` +
-                `<span class="week-range">${fmtRange(dates[0], dates[dates.length-1])}</span>`;
-            section.appendChild(hd);
+        for (let i = 0; i < 42; i++) {
+            const d = new Date(startDate);
+            d.setDate(startDate.getDate() + i);
+            const ds = d.toISOString().split('T')[0];
+            const inMonth = d.getMonth() === ui.month;
+            const isToday = ds === today;
+            const dow     = (d.getDay() + 6) % 7;
+            const isWeekend = dow >= 5;
+            const data    = state.data[ds] || {};
+            const hasTod  = !!(data.today     && data.today.trim());
+            const hasNxt  = !!(data[nextKey()] && data[nextKey()].trim());
+            const hasNts  = !!(data.notes      && data.notes.trim());
+            const hasAny  = hasTod || hasNxt || hasNts;
+            const preview = data.today ? data.today.split('\n')[0].trim() : '';
 
-            // Scrollable table wrapper
-            const scroll = document.createElement('div');
-            scroll.className = 'table-scroll';
-            const table = document.createElement('table');
+            const cell = document.createElement('div');
+            const cls = ['cal-cell'];
+            if (!inMonth) cls.push('other-month');
+            if (isToday)  cls.push('is-today');
+            if (isWeekend && inMonth) cls.push('weekend');
+            cell.className = cls.join(' ');
 
-            /* thead */
-            const thead = document.createElement('thead');
-            const hdrRow = document.createElement('tr');
-            const th0 = document.createElement('th');
-            th0.textContent = '— / —';
-            hdrRow.appendChild(th0);
+            // Date number
+            const numEl = document.createElement('div');
+            numEl.className = 'cal-num';
+            numEl.textContent = d.getDate();
+            cell.appendChild(numEl);
 
-            dates.forEach(ds => {
-                ensureDate(ds);
-                const f = fmtDate(ds);
-                const isToday = ds === today;
-                const th = document.createElement('th');
-                if (isToday) th.classList.add('col-today');
-                th.innerHTML =
-                    `<div class="th-inner">` +
-                        `<span class="th-day">${f.day}</span>` +
-                        `<span class="th-dow">${f.dow}${isToday ? ' · Today' : ''}</span>` +
-                    `</div>` +
-                    `<button class="del-btn" onclick="deleteDate('${ds}')" title="Remove">×</button>`;
-                hdrRow.appendChild(th);
+            // Preview text (in-month only)
+            if (inMonth && preview) {
+                const prevEl = document.createElement('div');
+                prevEl.className = 'cal-preview';
+                prevEl.textContent = preview;
+                cell.appendChild(prevEl);
+            }
+
+            // Indicator dots
+            if (inMonth && hasAny) {
+                const dotsEl = document.createElement('div');
+                dotsEl.className = 'cal-dots';
+                if (hasTod) dotsEl.innerHTML += '<span class="dot dot-today"></span>';
+                if (hasNxt) dotsEl.innerHTML += '<span class="dot dot-next"></span>';
+                if (hasNts) dotsEl.innerHTML += '<span class="dot dot-notes"></span>';
+                cell.appendChild(dotsEl);
+            }
+
+            cell.addEventListener('click', () => {
+                if (!inMonth) {
+                    ui.year  = d.getFullYear();
+                    ui.month = d.getMonth();
+                    renderCalendar();
+                }
+                openModal(ds);
             });
 
-            thead.appendChild(hdrRow);
-            table.appendChild(thead);
-
-            /* tbody */
-            const tbody = document.createElement('tbody');
-            const rowDefs = [
-                { cls:'row-today', num:'01', label:'當日進度', field:'today',    ph:'當日工作進度…' },
-                { cls:'row-next',  num:'02',
-                  label: state.row2Mode === 'tomorrow' ? '明日進度' : '下週進度',
-                  field: nextKey(),
-                  ph:    state.row2Mode === 'tomorrow' ? '明日計畫…' : '下週計畫…' },
-                { cls:'row-notes', num:'03', label:'備　　註', field:'notes',    ph:'備註…' },
-            ];
-
-            rowDefs.forEach(def => {
-                const tr = document.createElement('tr');
-                tr.className = def.cls;
-                const tdLbl = document.createElement('td');
-                tdLbl.className = 'row-label';
-                tdLbl.innerHTML =
-                    `<span class="lbl-num">${def.num}</span>` +
-                    `<span class="lbl-text">${def.label}</span>`;
-                tr.appendChild(tdLbl);
-                dates.forEach(ds => tr.appendChild(mkCell(ds, def.field, def.ph, ds === today)));
-                tbody.appendChild(tr);
-            });
-
-            table.appendChild(tbody);
-            scroll.appendChild(table);
-            section.appendChild(scroll);
-            container.appendChild(section);
-        });
-
-        updateToggleUI();
+            grid.appendChild(cell);
+        }
     }
 
-    function mkCell(ds, field, placeholder, isToday) {
-        const td = document.createElement('td');
-        td.className = 'editable' + (isToday ? ' col-today-cell' : '');
-        td.contentEditable = 'true';
-        td.setAttribute('data-placeholder', placeholder);
-        td.textContent = state.data[ds][field] || '';
+    /* ── Modal ── */
+    function openModal(ds) {
+        ui.activeDate = ds;
+        ensureDate(ds);
+        const data = state.data[ds];
+        const fmt  = fmtModalDate(ds);
 
-        td.addEventListener('input', () => {
-            ensureDate(ds);
-            state.data[ds][field] = td.textContent;
+        document.getElementById('modal-date-big').textContent = fmt.big;
+        document.getElementById('modal-date-sub').textContent = fmt.sub;
+        document.getElementById('f-today').value = data.today     || '';
+        document.getElementById('f-next').value  = data[nextKey()] || '';
+        document.getElementById('f-notes').value = data.notes     || '';
+
+        syncToggleUI();
+        document.getElementById('modal-backdrop').classList.add('open');
+        setTimeout(() => document.getElementById('f-today').focus(), 60);
+    }
+
+    function closeModal() {
+        document.getElementById('modal-backdrop').classList.remove('open');
+        ui.activeDate = null;
+        renderCalendar();
+    }
+
+    function onBackdropClick(e) {
+        if (e.target === document.getElementById('modal-backdrop')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* Auto-save on input */
+    ['f-today','f-next','f-notes'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            if (!ui.activeDate) return;
+            ensureDate(ui.activeDate);
+            const d = state.data[ui.activeDate];
+            d.today  = document.getElementById('f-today').value;
+            d[nextKey()] = document.getElementById('f-next').value;
+            d.notes  = document.getElementById('f-notes').value;
             saveState();
         });
-        td.addEventListener('paste', e => {
-            e.preventDefault();
-            document.execCommand('insertText', false,
-                (e.clipboardData || window.clipboardData).getData('text'));
-        });
-        return td;
-    }
+    });
 
-    /* ── Actions ─────────────────────────────────── */
-    function addDateColumn() {
-        const inp = document.getElementById('new-date-input');
-        let ds = inp.value;
-        if (!ds) {
-            const base = state.dates.length
-                ? new Date(state.dates[state.dates.length-1] + 'T00:00:00')
-                : new Date();
-            base.setDate(base.getDate() + 1);
-            ds = base.toISOString().split('T')[0];
+    function toggleMode() {
+        if (ui.activeDate) {
+            // Persist before switching
+            state.data[ui.activeDate][nextKey()] = document.getElementById('f-next').value;
         }
-        if (state.dates.includes(ds)) { alert('此日期已存在'); return; }
-        state.dates.push(ds);
-        state.dates.sort();
-        ensureDate(ds);
-        saveState();
-        renderTable();
-        inp.value = '';
-    }
-
-    function deleteDate(ds) {
-        if (!confirm(`刪除 ${ds}？`)) return;
-        state.dates = state.dates.filter(d => d !== ds);
-        delete state.data[ds];
-        saveState();
-        renderTable();
-    }
-
-    function toggleRow2Mode() {
         state.row2Mode = state.row2Mode === 'tomorrow' ? 'nextweek' : 'tomorrow';
         saveState();
-        renderTable();
-    }
-
-    function updateToggleUI() {
-        const btn   = document.getElementById('toggle-btn');
-        const badge = document.getElementById('mode-badge');
-        if (state.row2Mode === 'tomorrow') {
-            btn.textContent = '→ Next Week';
-            badge.textContent = 'Tomorrow';
-            badge.style.background = '#B03A2E';
-        } else {
-            btn.textContent = '→ Tomorrow';
-            badge.textContent = 'Next Week';
-            badge.style.background = '#2A4A72';
+        if (ui.activeDate) {
+            document.getElementById('f-next').value = state.data[ui.activeDate][nextKey()] || '';
         }
+        syncToggleUI();
     }
 
-    /* ── Export ──────────────────────────────────── */
+    function syncToggleUI() {
+        const tomorrow = state.row2Mode === 'tomorrow';
+        document.getElementById('f-next-lbl').textContent  = tomorrow ? '02 · 明日工作進度' : '02 · 下週工作進度';
+        document.getElementById('f-toggle').textContent    = tomorrow ? '切換→ 下週' : '切換→ 明日';
+        document.getElementById('f-next').placeholder      = tomorrow ? '明日計畫…' : '下週計畫…';
+    }
+
+    /* ── Nav ── */
+    function prevMonth() {
+        if (ui.month === 0) { ui.month = 11; ui.year--; }
+        else ui.month--;
+        renderCalendar();
+    }
+    function nextMonth() {
+        if (ui.month === 11) { ui.month = 0; ui.year++; }
+        else ui.month++;
+        renderCalendar();
+    }
+    function goToday() {
+        const now = new Date();
+        ui.year  = now.getFullYear();
+        ui.month = now.getMonth();
+        renderCalendar();
+    }
+
+    /* ── Export ── */
     function exportJSON() {
         dl('work-progress.json', JSON.stringify(state, null, 2), 'application/json');
     }
     function exportCSV() {
+        const dates = Object.keys(state.data).sort();
         const rows = [['日期','當日','明日','下週','備註']];
-        state.dates.forEach(ds => {
-            const d = state.data[ds] || {};
-            rows.push([ds, d.today||'', d.tomorrow||'', d.nextweek||'', d.notes||'']);
+        dates.forEach(ds => {
+            const d = state.data[ds];
+            if (d.today || d.tomorrow || d.nextweek || d.notes)
+                rows.push([ds, d.today||'', d.tomorrow||'', d.nextweek||'', d.notes||'']);
         });
         const csv = rows.map(r => r.map(c => `"${c.replace(/"/g,'""')}"`).join(',')).join('\r\n');
         dl('work-progress.csv', '﻿'+csv, 'text/csv');
@@ -591,17 +706,15 @@
             href: URL.createObjectURL(new Blob([content], {type:mime})),
             download: name
         });
-        a.click();
-        URL.revokeObjectURL(a.href);
+        a.click(); URL.revokeObjectURL(a.href);
     }
 
-    /* ── Init ────────────────────────────────────── */
+    /* ── Init ── */
     document.getElementById('footer-date').textContent =
         new Date().toLocaleDateString('zh-TW', { year:'numeric', month:'long', day:'numeric' });
 
     loadState();
-    document.getElementById('new-date-input').value = todayStr();
-    renderTable();
+    renderCalendar();
 </script>
 </body>
 </html>
