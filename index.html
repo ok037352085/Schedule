@@ -416,13 +416,13 @@
 
 <div class="cal-wrap" style="padding-top:12px">
     <div class="cal-dow-row">
+        <div class="cal-dow weekend">Sun</div>
         <div class="cal-dow">Mon</div>
         <div class="cal-dow">Tue</div>
         <div class="cal-dow">Wed</div>
         <div class="cal-dow">Thu</div>
         <div class="cal-dow">Fri</div>
         <div class="cal-dow weekend">Sat</div>
-        <div class="cal-dow weekend">Sun</div>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
 </div>
@@ -469,7 +469,7 @@
 <script>
     const MONTHS = ['January','February','March','April','May','June',
                     'July','August','September','October','November','December'];
-    const DOW_EN = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const DOW_EN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
     /* ── State ── */
     let state = { row2Mode: 'tomorrow', data: {} };
@@ -524,7 +524,7 @@
 
     function fmtModalDate(ds) {
         const d = new Date(ds + 'T00:00:00');
-        const dow = DOW_EN[(d.getDay() + 6) % 7];
+        const dow = DOW_EN[d.getDay()];
         return {
             big: `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`,
             sub: `${dow} · Week ${isoWeek(ds)}`,
@@ -542,7 +542,7 @@
 
         // First day of month, offset to Monday start
         const first = new Date(ui.year, ui.month, 1);
-        const startOffset = (first.getDay() + 6) % 7; // 0=Mon
+        const startOffset = first.getDay(); // 0=Sun
         const startDate = new Date(first);
         startDate.setDate(first.getDate() - startOffset);
 
@@ -552,8 +552,8 @@
             const ds = d.toISOString().split('T')[0];
             const inMonth = d.getMonth() === ui.month;
             const isToday = ds === today;
-            const dow     = (d.getDay() + 6) % 7;
-            const isWeekend = dow >= 5;
+            const dow     = d.getDay(); // 0=Sun, 6=Sat
+            const isWeekend = dow === 0 || dow === 6;
             const data    = state.data[ds] || {};
             const hasTod  = !!(data.today     && data.today.trim());
             const hasNxt  = !!(data[nextKey()] && data[nextKey()].trim());
