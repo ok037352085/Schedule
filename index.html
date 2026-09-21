@@ -33,7 +33,6 @@
             min-height: 100vh;
         }
 
-        /* top accent stripe */
         body::before {
             content: '';
             display: block;
@@ -41,7 +40,7 @@
             background: var(--red);
         }
 
-        /* ── HEADER ─────────────────────────────── */
+        /* ── HEADER ── */
         .app-header {
             background: var(--ink);
             color: var(--cream);
@@ -51,28 +50,19 @@
             align-items: center;
             justify-content: space-between;
         }
-
-        .header-left {
-            display: flex;
-            align-items: baseline;
-            gap: 18px;
-        }
-
+        .header-left { display: flex; align-items: baseline; gap: 18px; }
         .header-title {
             font-family: var(--serif);
             font-style: italic;
             font-size: 22px;
             color: var(--cream);
-            letter-spacing: 0.01em;
         }
-
         .header-meta {
             font-size: 10px;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: rgba(245,241,232,0.3);
         }
-
         .save-indicator {
             font-size: 10px;
             letter-spacing: 0.14em;
@@ -82,7 +72,7 @@
         }
         .save-indicator.saving { color: #D4894A; }
 
-        /* ── TOOLBAR ─────────────────────────────── */
+        /* ── TOOLBAR ── */
         .toolbar {
             background: var(--cream-dark);
             border-bottom: 1.5px solid var(--ink);
@@ -91,7 +81,6 @@
             display: flex;
             align-items: center;
         }
-
         .t-group {
             display: flex;
             align-items: center;
@@ -101,13 +90,7 @@
             border-right: 1px solid var(--rule);
         }
         .t-group:last-child { border-right: none; padding-right: 0; margin-right: 0; }
-
-        .t-label {
-            font-size: 10px;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: var(--ink-light);
-        }
+        .t-label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-light); }
 
         input[type="date"] {
             background: transparent;
@@ -134,14 +117,11 @@
             border-radius: 0;
             transition: background 0.12s, color 0.12s;
         }
-
-        .btn-ink  { color: var(--ink); }
+        .btn-ink { color: var(--ink); }
         .btn-ink:hover { background: var(--ink); color: var(--cream); }
-
-        .btn-red  { color: var(--red); border-color: var(--red); }
+        .btn-red { color: var(--red); border-color: var(--red); }
         .btn-red:hover { background: var(--red); color: var(--cream); }
-
-        .btn-dim  { color: var(--ink-light); border-color: var(--rule); }
+        .btn-dim { color: var(--ink-light); border-color: var(--rule); }
         .btn-dim:hover { background: var(--ink-mid); color: var(--cream); border-color: var(--ink-mid); }
 
         .mode-chip {
@@ -155,17 +135,49 @@
             background: var(--red);
         }
 
-        /* ── TABLE ───────────────────────────────── */
-        .table-wrapper {
-            padding: 24px 28px 36px;
-            overflow-x: auto;
+        /* ── WEEK SECTIONS ── */
+        .weeks-container {
+            padding: 24px 28px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
         }
 
+        .week-hd {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            padding-bottom: 6px;
+            border-bottom: 1.5px solid var(--ink);
+        }
+
+        .week-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cream);
+            background: var(--red);
+            padding: 2px 7px;
+        }
+
+        .week-range {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 13px;
+            color: var(--ink-light);
+        }
+
+        .table-scroll { overflow-x: auto; }
+
+        /* ── TABLE ── */
         table {
             border-collapse: collapse;
             width: 100%;
-            min-width: 560px;
+            min-width: 400px;
             border: 1.5px solid var(--ink);
+            border-top: none;
         }
 
         thead th {
@@ -192,8 +204,8 @@
         thead th.col-today { background: var(--green); }
 
         .th-inner { display: flex; flex-direction: column; align-items: center; gap: 1px; }
-        .th-day   { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; }
-        .th-dow   { font-size: 10px; opacity: 0.48; letter-spacing: 0.16em; }
+        .th-day { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; }
+        .th-dow { font-size: 10px; opacity: 0.48; letter-spacing: 0.16em; }
 
         .del-btn {
             position: absolute;
@@ -213,14 +225,9 @@
 
         tbody tr { border-bottom: 1px solid var(--rule-light); }
         tbody tr:last-child { border-bottom: none; }
-
-        tbody td {
-            border-right: 1px solid var(--rule-light);
-            vertical-align: top;
-        }
+        tbody td { border-right: 1px solid var(--rule-light); vertical-align: top; }
         tbody td:last-child { border-right: none; }
 
-        /* Row label cells */
         td.row-label {
             background: var(--ink);
             border-right: 1.5px solid var(--ink) !important;
@@ -229,7 +236,6 @@
             white-space: nowrap;
             user-select: none;
         }
-
         .lbl-num {
             display: block;
             font-family: var(--serif);
@@ -239,7 +245,6 @@
             line-height: 1;
             margin-bottom: 4px;
         }
-
         .lbl-text {
             display: block;
             font-family: var(--mono);
@@ -249,11 +254,11 @@
             text-transform: uppercase;
         }
 
-        #row-today .lbl-text { color: #72C290; }
-        #row-next  .lbl-text { color: #E8956A; }
-        #row-notes .lbl-text { color: #7AADCF; }
+        /* Row type colours via class (not ID — multiple tables) */
+        tr.row-today .lbl-text { color: #72C290; }
+        tr.row-next  .lbl-text { color: #E8956A; }
+        tr.row-notes .lbl-text { color: #7AADCF; }
 
-        /* Editable cells */
         td.editable {
             padding: 11px 14px;
             outline: none;
@@ -266,7 +271,6 @@
             background: var(--cream);
             transition: background 0.1s;
         }
-
         td.editable:focus {
             background: #FDFCF8;
             box-shadow: inset 2px 0 0 var(--red);
@@ -274,7 +278,6 @@
             position: relative;
             z-index: 1;
         }
-
         td.editable:empty::before {
             content: attr(data-placeholder);
             color: var(--rule);
@@ -282,18 +285,16 @@
             pointer-events: none;
         }
 
-        #row-today td.editable { background: #F4F1E9; }
-        #row-next  td.editable { background: #F5F0EA; }
-        #row-notes td.editable { background: #F4F2EA; }
-        #row-today td.editable:focus,
-        #row-next  td.editable:focus,
-        #row-notes td.editable:focus { background: #FDFCF8; }
+        tr.row-today td.editable { background: #F4F1E9; }
+        tr.row-next  td.editable { background: #F5F0EA; }
+        tr.row-notes td.editable { background: #F4F2EA; }
+        tr.row-today td.editable:focus,
+        tr.row-next  td.editable:focus,
+        tr.row-notes td.editable:focus { background: #FDFCF8; }
 
-        td.editable.col-today-cell {
-            border-top: 2px solid var(--green) !important;
-        }
+        td.editable.col-today-cell { border-top: 2px solid var(--green) !important; }
 
-        /* ── FOOTER ──────────────────────────────── */
+        /* ── FOOTER ── */
         .footer {
             padding: 12px 28px;
             border-top: 1px solid var(--rule-light);
@@ -301,18 +302,8 @@
             justify-content: space-between;
             align-items: center;
         }
-        .footer-l {
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--ink-light);
-        }
-        .footer-r {
-            font-family: var(--serif);
-            font-style: italic;
-            font-size: 13px;
-            color: var(--rule);
-        }
+        .footer-l { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); }
+        .footer-r { font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--rule); }
     </style>
 </head>
 <body>
@@ -341,35 +332,7 @@
     </div>
 </div>
 
-<div class="table-wrapper">
-    <table id="progress-table">
-        <thead>
-            <tr id="header-row">
-                <th>— / —</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr id="row-today">
-                <td class="row-label">
-                    <span class="lbl-num">01</span>
-                    <span class="lbl-text">當日進度</span>
-                </td>
-            </tr>
-            <tr id="row-next">
-                <td class="row-label">
-                    <span class="lbl-num">02</span>
-                    <span class="lbl-text" id="row2-lbl">明日進度</span>
-                </td>
-            </tr>
-            <tr id="row-notes">
-                <td class="row-label">
-                    <span class="lbl-num">03</span>
-                    <span class="lbl-text">備　　註</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<div class="weeks-container" id="weeks-container"></div>
 
 <footer class="footer">
     <span class="footer-l">Auto-saved · GitHub Pages</span>
@@ -417,42 +380,126 @@
 
     function nextKey() { return state.row2Mode === 'tomorrow' ? 'tomorrow' : 'nextweek'; }
 
-    function renderTable() {
-        const hdr  = document.getElementById('header-row');
-        const rTod = document.getElementById('row-today');
-        const rNxt = document.getElementById('row-next');
-        const rNts = document.getElementById('row-notes');
+    /* ── Week grouping ────────────────────────────
+       Key = Monday of ISO week (not display start).
+       Dates that fall in the same ISO week are grouped
+       together regardless of which day they start on.
+    ─────────────────────────────────────────────── */
+    function getMondayKey(ds) {
+        const d = new Date(ds + 'T00:00:00');
+        const day = d.getDay();                  // 0=Sun … 6=Sat
+        const diff = day === 0 ? -6 : 1 - day;  // offset to Monday
+        const mon = new Date(d);
+        mon.setDate(d.getDate() + diff);
+        return mon.toISOString().split('T')[0];
+    }
 
-        [hdr, rTod, rNxt, rNts].forEach(r => {
-            while (r.children.length > 1) r.removeChild(r.lastChild);
+    function getISOWeekNum(mondayDs) {
+        const mon = new Date(mondayDs + 'T00:00:00');
+        const thu = new Date(mon);
+        thu.setDate(mon.getDate() + 3);           // Thursday of same week
+        const yearStart = new Date(thu.getFullYear(), 0, 1);
+        return Math.ceil(((thu - yearStart) / 86400000 + 1) / 7);
+    }
+
+    function groupDates(dates) {
+        const map = {};
+        const order = [];
+        dates.forEach(ds => {
+            const key = getMondayKey(ds);
+            if (!map[key]) { map[key] = []; order.push(key); }
+            map[key].push(ds);
         });
+        return order.map(k => ({ mondayKey: k, dates: map[k] }));
+    }
 
-        document.getElementById('row2-lbl').textContent =
-            state.row2Mode === 'tomorrow' ? '明日進度' : '下週進度';
+    function fmtRange(first, last) {
+        const s = ds => {
+            const d = new Date(ds + 'T00:00:00');
+            return `${d.getMonth()+1}/${d.getDate()}`;
+        };
+        return first === last ? s(first) : `${s(first)} — ${s(last)}`;
+    }
+
+    /* ── Render ─────────────────────────────────── */
+    function renderTable() {
+        const container = document.getElementById('weeks-container');
+        container.innerHTML = '';
 
         const today = todayStr();
+        const groups = groupDates(state.dates);
 
-        state.dates.forEach(ds => {
-            ensureDate(ds);
-            const f = fmtDate(ds);
-            const isToday = ds === today;
+        groups.forEach(({ mondayKey, dates }) => {
+            const weekNum = getISOWeekNum(mondayKey);
+            const section = document.createElement('div');
+            section.className = 'week-section';
 
-            const th = document.createElement('th');
-            if (isToday) th.classList.add('col-today');
-            th.innerHTML = `
-                <div class="th-inner">
-                    <span class="th-day">${f.day}</span>
-                    <span class="th-dow">${f.dow}${isToday ? ' · Today' : ''}</span>
-                </div>
-                <button class="del-btn" onclick="deleteDate('${ds}')" title="Remove">×</button>
-            `;
-            hdr.appendChild(th);
+            // Week header
+            const hd = document.createElement('div');
+            hd.className = 'week-hd';
+            hd.innerHTML =
+                `<span class="week-num">W${weekNum}</span>` +
+                `<span class="week-range">${fmtRange(dates[0], dates[dates.length-1])}</span>`;
+            section.appendChild(hd);
 
-            const ph = { today:'當日工作進度…', tomorrow:'明日計畫…', nextweek:'下週計畫…', notes:'備註…' };
+            // Scrollable table wrapper
+            const scroll = document.createElement('div');
+            scroll.className = 'table-scroll';
+            const table = document.createElement('table');
 
-            rTod.appendChild(mkCell(ds, 'today',    ph.today,        isToday));
-            rNxt.appendChild(mkCell(ds, nextKey(),  ph[nextKey()],   isToday));
-            rNts.appendChild(mkCell(ds, 'notes',    ph.notes,        isToday));
+            /* thead */
+            const thead = document.createElement('thead');
+            const hdrRow = document.createElement('tr');
+            const th0 = document.createElement('th');
+            th0.textContent = '— / —';
+            hdrRow.appendChild(th0);
+
+            dates.forEach(ds => {
+                ensureDate(ds);
+                const f = fmtDate(ds);
+                const isToday = ds === today;
+                const th = document.createElement('th');
+                if (isToday) th.classList.add('col-today');
+                th.innerHTML =
+                    `<div class="th-inner">` +
+                        `<span class="th-day">${f.day}</span>` +
+                        `<span class="th-dow">${f.dow}${isToday ? ' · Today' : ''}</span>` +
+                    `</div>` +
+                    `<button class="del-btn" onclick="deleteDate('${ds}')" title="Remove">×</button>`;
+                hdrRow.appendChild(th);
+            });
+
+            thead.appendChild(hdrRow);
+            table.appendChild(thead);
+
+            /* tbody */
+            const tbody = document.createElement('tbody');
+            const rowDefs = [
+                { cls:'row-today', num:'01', label:'當日進度', field:'today',    ph:'當日工作進度…' },
+                { cls:'row-next',  num:'02',
+                  label: state.row2Mode === 'tomorrow' ? '明日進度' : '下週進度',
+                  field: nextKey(),
+                  ph:    state.row2Mode === 'tomorrow' ? '明日計畫…' : '下週計畫…' },
+                { cls:'row-notes', num:'03', label:'備　　註', field:'notes',    ph:'備註…' },
+            ];
+
+            rowDefs.forEach(def => {
+                const tr = document.createElement('tr');
+                tr.className = def.cls;
+                const tdLbl = document.createElement('td');
+                tdLbl.className = 'row-label';
+                tdLbl.innerHTML =
+                    `<span class="lbl-num">${def.num}</span>` +
+                    `<span class="lbl-text">${def.label}</span>`;
+                tr.appendChild(tdLbl);
+                dates.forEach(ds => tr.appendChild(mkCell(ds, def.field, def.ph, ds === today)));
+                tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody);
+            scroll.appendChild(table);
+            section.appendChild(scroll);
+            container.appendChild(section);
         });
 
         updateToggleUI();
@@ -470,16 +517,15 @@
             state.data[ds][field] = td.textContent;
             saveState();
         });
-
         td.addEventListener('paste', e => {
             e.preventDefault();
             document.execCommand('insertText', false,
                 (e.clipboardData || window.clipboardData).getData('text'));
         });
-
         return td;
     }
 
+    /* ── Actions ─────────────────────────────────── */
     function addDateColumn() {
         const inp = document.getElementById('new-date-input');
         let ds = inp.value;
@@ -527,10 +573,10 @@
         }
     }
 
+    /* ── Export ──────────────────────────────────── */
     function exportJSON() {
         dl('work-progress.json', JSON.stringify(state, null, 2), 'application/json');
     }
-
     function exportCSV() {
         const rows = [['日期','當日','明日','下週','備註']];
         state.dates.forEach(ds => {
@@ -540,7 +586,6 @@
         const csv = rows.map(r => r.map(c => `"${c.replace(/"/g,'""')}"`).join(',')).join('\r\n');
         dl('work-progress.csv', '﻿'+csv, 'text/csv');
     }
-
     function dl(name, content, mime) {
         const a = Object.assign(document.createElement('a'), {
             href: URL.createObjectURL(new Blob([content], {type:mime})),
@@ -550,6 +595,7 @@
         URL.revokeObjectURL(a.href);
     }
 
+    /* ── Init ────────────────────────────────────── */
     document.getElementById('footer-date').textContent =
         new Date().toLocaleDateString('zh-TW', { year:'numeric', month:'long', day:'numeric' });
 
